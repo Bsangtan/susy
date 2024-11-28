@@ -166,6 +166,21 @@ void gauge_field_copy(field_offset src, field_offset dest) {
     }
   }
 }
+
+// -- edited 
+
+// Copy a scalar fields
+void scalar_field_copy(field_offset src, field_offset dest) {
+  register int i;
+  register site *s;
+
+  FORALLSITES(i, s) {
+    mat_copy((matrix *)F_PT(s, src), (matrix *)F_PT(s, dest));
+  }
+}
+
+
+
 // -----------------------------------------------------------------
 
 

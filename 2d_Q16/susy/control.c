@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
   // Check: compute initial plaquette and bosonic action
   plaquette(&ss_plaq, &st_plaq);
   node0_printf("START %.8g %.8g %.8g ", ss_plaq, st_plaq, ss_plaq + st_plaq);
-  ss_plaq = gauge_action(NODET);
+  ss_plaq = gauge_action(NODET);//+sa(NODET)+bmass_action();// edited-------
   node0_printf("%.8g\n", ss_plaq / (double)volume);
   // N>2 determinant of traceless part of U.Udag crashes with unit config
   if (startflag != FRESH) {
@@ -89,37 +89,49 @@ int main(int argc, char *argv[]) {
 
     // Bosonic action (printed twice by request)
     // Might as well spit out volume average of Polyakov loop modulus
-    ss_plaq = gauge_action(NODET);
+    //----edited-------
+    
+    ss_plaq = gauge_action(NODET) /*+ sa(NODET)*/; // mpi will work here for sa(NODET)
+    
+    //ss_plaq = gauge_action(NODET)+sa(NODET);//+bmass_action();
     node0_printf("%.8g ", ss_plaq / (double)volume);
     node0_printf("%.8g\n", plpMod);
-    node0_printf("BACTION %.8g\n", ss_plaq / (double)volume);
+    node0_printf("BACTION %.8g\n", (ss_plaq /*+ sa(NODET)*/)/ (double)volume);// edited with + sa(NODET) inside print[ss_plaq + sa(NODET))/ (double)volume)] mpi will not work
 
     // Full and polar-projected Wilson lines in all directions
-    node0_printf("LINES      ");
+    node0_printf("LINES      "); // FORALLDIR for (dir = XUP; dir < NUMLINK; dir++), XUP = 0, int dir
     FORALLDIR(dir) {
       plp = ploop(dir, NODET, &plpMod);
       node0_printf(" %.6g %.6g", plp.real, plp.imag);
     }
+    
     node0_printf("\nLINES_POLAR");
     FORALLDIR(dir) {
       plp = ploop(dir, YESDET, &plpMod);
       node0_printf(" %.6g %.6g", plp.real, plp.imag);
     }
+    
     node0_printf("\n");
 
     // Plaquette determinant
+    
     measure_det();
 
     // Monitor widths of plaquette and plaquette determinant distributions
+    
+  
     widths();
 
     // Monitor scalar eigenvalues
     // Format: SCALAR_EIG # ave width min max
+     
     scalar_eig(NODET, ave_eigs, eig_widths, min_eigs, max_eigs);
+   
     for (j = 0; j < NCOL; j++) {
       node0_printf("UUBAR_EIG %d %.6g %.6g %.6g %.6g\n",
                    j, ave_eigs[j], eig_widths[j], min_eigs[j], max_eigs[j]);
     }
+    
     scalar_eig(YESDET, ave_eigs, eig_widths, min_eigs, max_eigs);
     for (j = 0; j < NCOL; j++) {
       node0_printf("POLAR_EIG %d %.6g %.6g %.6g %.6g\n",
@@ -164,6 +176,18 @@ int main(int argc, char *argv[]) {
       compute_Uinv();
       compute_DmuUmu();
       compute_Fmunu();
+      //----edited------
+      /*
+      compute_Dmuphi();
+      compute_Dmuvarphi();
+      compute_varphi_phi_commutator();
+      compute_phi_commutator();
+      compute_varphi_commutator();
+      compute_Trm1();
+      compute_Trm2();
+      */
+      
+      
 #endif
 
 #ifdef BILIN
@@ -248,6 +272,14 @@ int main(int argc, char *argv[]) {
       compute_Uinv();
       compute_DmuUmu();
       compute_Fmunu();
+      //---edited----
+      /*
+      compute_Dmuphi();
+      compute_Dmuvarphi();
+      compute_varphi_phi_commutator();
+      compute_phi_commutator();
+      compute_varphi_commutator();
+      */
 #endif
     }
     fflush(stdout);
@@ -258,10 +290,21 @@ int main(int argc, char *argv[]) {
   // Reset DmuUmu and Fmunu in case they were smeared above
   compute_DmuUmu();
   compute_Fmunu();
+  
+  //---edited----
+  /*
+  compute_Dmuphi();
+  compute_Dmuvarphi();
+  compute_varphi_phi_commutator();
+  compute_phi_commutator();
+  compute_varphi_commutator();    
+  */
+  
+  
   plaquette(&ss_plaq, &st_plaq);
   node0_printf("STOP %.8g %.8g %.8g ",
                ss_plaq, st_plaq, ss_plaq + st_plaq);
-  ss_plaq = gauge_action(NODET);
+  ss_plaq = gauge_action(NODET);//+sa(NODET)+bmass_action();// edited--------
   node0_printf("%.8g\n", ss_plaq / (double)volume);
 
   node0_printf("Average CG iters for steps: %.4g\n",

@@ -9,15 +9,17 @@
 // -----------------------------------------------------------------
 // Construct gaussian random momentum matrices
 // as sum of U(N) generators with gaussian random coefficients
+
+
 void ranmom() {
-  register int i, j, mu;
+  register int i, j, k, mu;
   register site *s;
   complex grn;
 
   FORALLSITES(i, s) {
     FORALLDIR(mu) {
       clear_mat(&(s->mom[mu]));
-      for (j = 0; j < DIMF; j++) {
+      for (j = 0; j < DIMF; j++) {                      // #define DIMF = (NCOL * NCOL)
 #ifdef SITERAND
         grn.real = gaussian_rand_no(&(s->site_prn));
         grn.imag = gaussian_rand_no(&(s->site_prn));
@@ -25,13 +27,54 @@ void ranmom() {
         grn.real = gaussian_rand_no(&(s->node_prn));
         grn.imag = gaussian_rand_no(&(s->node_prn));
 #endif
-        c_scalar_mult_sum_mat(&(Lambda[j]), &grn, &(s->mom[mu]));
+        //grn.real = 0; //Debug
+        //grn.imag = 0;
+        c_scalar_mult_sum_mat(&(Lambda[j]), &grn, &(s->mom[mu])); // mom[0]=mom0(1) + mom0(2) + mom0(3) + ..................
       }
     }
+    //maybe use generator matrices for mom_phi
+    //but this should be correct
+    clear_mat(&(s->mom_phi));
+    for(j = 0; j < NCOL; j++) {
+      for (k = 0; k < NCOL; k++) { // ---edited--------------
+#ifdef SITERAND
+        grn.real = gaussian_rand_no(&(s->site_prn));
+        grn.imag = gaussian_rand_no(&(s->site_prn));
+#else
+        grn.real = gaussian_rand_no(&(s->node_prn));
+        grn.imag = gaussian_rand_no(&(s->node_prn));
+#endif
+        s->mom_phi.e[j][k].real = grn.real;
+        s->mom_phi.e[j][k].imag = grn.imag;
+      }
+    }
+ // edited -- can merge mom_varphi with mom_phi in single loop to reduce computational cost
+    clear_mat(&(s->mom_varphi));
+    for(j = 0; j < NCOL; j++) {
+      for (k = 0; k < NCOL; k++) { // ---edited--------------
+#ifdef SITERAND
+        grn.real = gaussian_rand_no(&(s->site_prn));
+        grn.imag = gaussian_rand_no(&(s->site_prn));
+#else
+        grn.real = gaussian_rand_no(&(s->node_prn));
+        grn.imag = gaussian_rand_no(&(s->node_prn));
+#endif
+        s->mom_varphi.e[j][k].real = grn.real;
+        s->mom_varphi.e[j][k].imag = grn.imag;
+      }
+    }
+    
   }
+  
+  
 }
-// -----------------------------------------------------------------
 
+// -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// Construct gaussian random momentum matrices
+// as sum of U(N) generators with gaussian random coefficients
+
+// -----------------------------------------------------------------
 
 
 // -----------------------------------------------------------------

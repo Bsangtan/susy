@@ -22,7 +22,7 @@
 
 // -----------------------------------------------------------------
 // Susy stuff
-//#define EIG_POT           // Single rather than double-trace scalar potential
+#define EIG_POT           // Single rather than double-trace scalar potential
                           // Single-trace case is minimally tested!!!
 #define SV                // Site/vector terms in action
 #define VP                // Vector/plaquette terms in action

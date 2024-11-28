@@ -37,14 +37,25 @@ typedef struct {
 #endif
 
   matrix link[NUMLINK];       // Gauge links
+//-------7/9/23-----------  
 
+  matrix phi;               // Reduced scalar fields
+  
+  matrix varphi;            // Reduced scalar fields
+ 
+//-----edited-7/9/23------------
 #ifdef HMC_ALGORITHM
   matrix old_link[NUMLINK];   // For accept/reject
+  matrix old_phi;
+  matrix old_varphi;
 #endif
 
   // Momentum matrices in each direction are just U(N) matrices
   // as opposed to anti-hermitian matrices
+  //--edited------
   matrix mom[NUMLINK], f_U[NUMLINK];        // Force matrices
+  
+  matrix mom_phi, f_phi, mom_varphi, f_varphi; 
 
   // Boundary conditions -- many unused
   Real bc[2 * NUMLINK];
@@ -107,7 +118,7 @@ EXTERN Real ampdeg, *amp, *shift;
 EXTERN Real ampdeg4, *amp4, *shift4;
 EXTERN Real ampdeg8, *amp8, *shift8;
 EXTERN int Nroot, Norder;
-EXTERN Real gnorm, *fnorm, max_gf, *max_ff;
+EXTERN Real gnorm, phi_norm,*fnorm, max_gf, max_phif, *max_ff; //---edited with phi
 
 // Each node maintains a structure with the pseudorandom number
 // generator state
@@ -131,7 +142,8 @@ EXTERN Real one_ov_N;
 EXTERN complex minus1, *tr_eta;
 EXTERN complex *tr_dest, *Tr_Uinv[NUMLINK], *plaqdet[NUMLINK][NUMLINK];
 EXTERN complex *ZWstar[NUMLINK][NUMLINK], *tempdet[NUMLINK][NUMLINK];
-EXTERN matrix *DmuUmu, *Fmunu[NPLAQ];
+//----edited---
+EXTERN matrix *DmuUmu, *Dmuphi[NUMLINK],*Dmuvarphi[NUMLINK],*vp_commut,*phi_commut,*varphi_commut,*Trm1,*Trm2,*Fmunu[NPLAQ]; // extern ? ----7/9/23-----
 EXTERN matrix *Uinv[NUMLINK], *Udag_inv[NUMLINK], *UpsiU[NUMLINK];
 
 // CG Twist_Fermions

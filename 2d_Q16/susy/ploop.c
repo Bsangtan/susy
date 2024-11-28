@@ -3,7 +3,7 @@
 // Use tempmat, tempmat2, staple and UpsiU[0] for temporary storage
 #include "susy_includes.h"
 
-// dir tells us the direction of the product: XUP or TUP
+// dir tells us the direction of the product: XUP, TUP or DIR_3
 // project == 1 tells us to consider links unitarized via polar projection
 complex ploop(int dir, int project, double *plpMod) {
   register int i;
@@ -26,11 +26,15 @@ complex ploop(int dir, int project, double *plpMod) {
   switch(dir) {
     case XUP:
       len = nx;
-      norm = (double)(nt);
+      norm = 1.0 / (double)(nt);
       break;
     case TUP:
       len = nt;
-      norm = (double)(nx);
+      norm = 1.0 / (double)(nx);
+      break;
+    case DIR_3:
+      len = nt;
+      norm = 1.0 / (double)(nx);
       break;
     default:
       printf("ploop: unrecognized direction %d\n", dir);
@@ -48,8 +52,8 @@ complex ploop(int dir, int project, double *plpMod) {
     }
     g_complexsum(&sum);
     g_doublesum(plpMod);
-    CDIVREAL(sum, norm, sum);
-    *plpMod /= norm;
+    CMULREAL(sum, norm, sum);
+    *plpMod *= norm;
 
     if (project == 1) {       // Reset original links
       FORALLSITES(i, s)
@@ -67,8 +71,10 @@ complex ploop(int dir, int project, double *plpMod) {
     shiftmat(tempmat, tempmat2, goffset[dir]);
     FORALLSITES(i, s) {
       j = s->x;
-      if (dir == TUP)
-        j = s->t;
+      switch(dir) {
+        case TUP:   j = s->t; break;
+        case DIR_3: j = s->t; break;
+      }
       if (j != 0)
         continue;
 
@@ -84,8 +90,10 @@ complex ploop(int dir, int project, double *plpMod) {
   *plpMod = 0.0;
   FORALLSITES(i, s) {
     j = s->x;
-    if (dir == TUP)
-      j = s->t;
+    switch(dir) {
+      case TUP:   j = s->t; break;
+      case DIR_3: j = s->t; break;
+    }
     if (j != 0)
       continue;
 
@@ -95,8 +103,8 @@ complex ploop(int dir, int project, double *plpMod) {
   }
   g_complexsum(&sum);
   g_doublesum(plpMod);
-  CDIVREAL(sum, norm, sum);
-  *plpMod /= norm;
+  CMULREAL(sum, norm, sum);  //edited -------
+  *plpMod *= norm;
 
   if (project == 1) {       // Reset original links
     FORALLSITES(i, s)
