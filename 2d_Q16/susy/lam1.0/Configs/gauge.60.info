@@ -1,0 +1,8 @@
+magic_number = 20103
+time_stamp = "Tue Oct  1 20:27:21 2024"
+checksums = "b1e8ef62 706e54e6"
+nx = 4
+nt = 4
+gauge.previous.filename = "/home/bana/susy/2d_Q16/susy/lam1.0/Configs/gauge.50"
+gauge.previous.time_stamp = "Tue Oct  1 20:27:21 2024"
+gauge.previous.checksums = "78c18657 6afb10bc"

@@ -121,7 +121,20 @@ void make_fields() {
   size += (Real)(1.0 + NPLAQ + 3.0 * NUMLINK) * sizeof(matrix);
   size += (Real)(NUMLINK + 6.0 * NPLAQ) * sizeof(complex);
   FIELD_ALLOC(DmuUmu, matrix);
+  
+  //--edited-13-9-23----------
+  //FIELD_ALLOC(Dmuphi, matrix);
+  //FIELD_ALLOC(Dmuvarphi, matrix);
+  FIELD_ALLOC(vp_commut, matrix);
+  FIELD_ALLOC(phi_commut, matrix);
+  FIELD_ALLOC(varphi_commut, matrix);
+
+  //---end--------------
+  
   FIELD_ALLOC_VEC(Fmunu, matrix, NPLAQ);
+  //--edited
+  FIELD_ALLOC_VEC(Dmuphi, matrix, NUMLINK);
+  FIELD_ALLOC_VEC(Dmuvarphi, matrix, NUMLINK);
   FIELD_ALLOC_VEC(Uinv, matrix, NUMLINK);
   FIELD_ALLOC_VEC(Udag_inv, matrix, NUMLINK);
   FIELD_ALLOC_VEC(UpsiU, matrix, NUMLINK);
@@ -173,7 +186,7 @@ void make_fields() {
   node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
 #ifdef PHASE
   // Total number of matvecs is (volume * 4 * DIMF)^2 / 4
-  Nmatvecs = volume * 4 * DIMF * volume * DIMF;
+  Nmatvecs = volume * 4 * DIMF * volume * DIMF; // to be edited --- replace it with 4->16
 
   // Total size of matrix is (volume * 4 * DIMF) x (sites_on_node * 4 * DIMF)
   size = (Real)(volume * 4.0 * DIMF * 4.0 * DIMF * sizeof(complex));
@@ -365,7 +378,7 @@ int readin(int prompt) {
   else
     doG = 0;
 
-  kappa = (Real)NCOL * 0.25 / lambda;
+  kappa = (Real)NCOL * 0.25/ lambda;
   node0_printf("lambda=%.4g --> kappa=Nc/(4lambda)=%.4g\n",
                lambda, kappa);
   node0_printf("C2=%.4g\n", C2);    // Currently hardwired in defines.h
@@ -424,6 +437,15 @@ int readin(int prompt) {
   compute_plaqdet();
   compute_Uinv();
   compute_DmuUmu();
+  //edited--13-9-23-----
+  compute_Dmuphi();
+  compute_Dmuvarphi();
+  compute_varphi_phi_commutator();
+  compute_phi_commutator();
+  compute_varphi_commutator();
+
+  
+  //---end----
   compute_Fmunu();
   return 0;
 }

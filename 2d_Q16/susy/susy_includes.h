@@ -40,10 +40,21 @@ void setup_rhmc();
 void compute_plaqdet();
 void compute_Uinv();
 void compute_DmuUmu();
+//--edited 13-9-23-----
+void compute_Dmuphi();
+void compute_Dmuvarphi();
+void compute_varphi_phi_commutator();
+void compute_phi_commutator();
+void compute_varphi_commutator();
+//void compute_Trm1();
+//void compute_Trm2();
+
+//---end----
 void compute_Fmunu();
 
 // Gaussian random momentum matrices and pseudofermions
 void ranmom();
+void ranmom_phi(); //--edited---
 int grsource(Twist_Fermion *source);
 
 // Basic observables
@@ -58,11 +69,16 @@ void scalar_eig(int project, double *ave_eigs, double *eig_widths,
                 double *min_eigs, double *max_eigs);
 
 // Action routines
+//---edited----------
 double action(Twist_Fermion **source, Twist_Fermion ***sol);
 double gauge_action(int do_det);
+double sa(int do_det);
+double bmass_action();
 
 // Force routines
+//---edited-----
 double gauge_force(Real eps);
+double scalar_force(Real eps); // edited
 double fermion_force(Real eps, Twist_Fermion *source, Twist_Fermion **psim);
 double det_force(Real eps);
 
@@ -93,6 +109,7 @@ void scalar_mult_TF(Twist_Fermion *src, Real s, Twist_Fermion *dest);
 
 // Other routines in library_util.c that loop over all sites
 void gauge_field_copy(field_offset src, field_offset dest);
+void scalar_field_copy(field_offset src, field_offset dest); //--edited------
 void shiftmat(matrix *dat, matrix *temp, int dir);
 
 // Random gauge transformation for testing gauge invariance

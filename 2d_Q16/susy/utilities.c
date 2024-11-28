@@ -134,6 +134,18 @@ void compute_Uinv() {
 // All called by fermion_op at the bottom of the file
 #ifdef VP
 void Dplus(matrix *src[NUMLINK], matrix *dest[NPLAQ]) {
+
+//edited 
+      int p, q, indx;
+ for (p = 0; p < NUMLINK; p++) {
+    plaq_index[p][p] = -1;                                  // i,i=-1  ,  00=11=22=-1
+    for (q = p + 1; q < NUMLINK; q++) {
+      indx = p * (NUMLINK - 1) - p * (p + 1) / 2 + q - 1;//              01=0,02=1,12=2 
+      plaq_index[p][q] = indx;
+      plaq_index[q][p] = indx;                             // i,j=j,i, 01=10=0,02=20=1,12=21=2 
+    }
+  }
+
   register int i;
   register site *s;
   char **local_pt[2][4];
@@ -223,6 +235,18 @@ void Dplus(matrix *src[NUMLINK], matrix *dest[NPLAQ]) {
 // Use tempmat and tempmat2 for temporary storage
 #ifdef VP
 void Dminus(matrix *src[NPLAQ], matrix *dest[NUMLINK]) {
+
+//edited 
+      int p, q, indx;
+ for (p = 0; p < NUMLINK; p++) {
+    plaq_index[p][p] = -1;                                  // i,i=-1  ,  00=11=22=-1
+    for (q = p + 1; q < NUMLINK; q++) {
+      indx = p * (NUMLINK - 1) - p * (p + 1) / 2 + q - 1;//              01=0,02=1,12=2 
+      plaq_index[p][q] = indx;
+      plaq_index[q][p] = indx;                             // i,j=j,i, 01=10=0,02=20=1,12=21=2 
+    }
+  }
+
   register int i;
   register site *s;
   char **local_pt[2][2];
