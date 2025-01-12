@@ -513,6 +513,7 @@ void r_serial(gauge_file *gf) {
         f2d_mat(&tmat[j], &lattice[idest].link[j]);
       f2d_mat(&tmat[NUMLINK], &lattice[idest].phi);
       f2d_mat(&tmat[NUMLINK + 1], &lattice[idest].varphi);
+
     }
     else {
       rank29 += (NUMLINK + 2) * sizeof(fmatrix) / sizeof(int32type);

@@ -37,24 +37,16 @@ typedef struct {
 #endif
 
   matrix link[NUMLINK];       // Gauge links
-//-------7/9/23-----------  
-
-  matrix phi;               // Reduced scalar fields
-  
-  matrix varphi;            // Reduced scalar fields
+  matrix phi, varphi;         // Reduced scalar fields
  
-//-----edited-7/9/23------------
 #ifdef HMC_ALGORITHM
   matrix old_link[NUMLINK];   // For accept/reject
-  matrix old_phi;
-  matrix old_varphi;
+  matrix old_phi, old_varphi;
 #endif
 
   // Momentum matrices in each direction are just U(N) matrices
   // as opposed to anti-hermitian matrices
-  //--edited------
   matrix mom[NUMLINK], f_U[NUMLINK];        // Force matrices
-  
   matrix mom_phi, f_phi, mom_varphi, f_varphi; 
 
   // Boundary conditions -- many unused
